@@ -1,13 +1,22 @@
 import express from "express";
-import { PORT } from "./config.js";
+import { PORT, mongoDBURL } from "./config.js";
+import mongoose from "mongoose";
 
 const app = express();
 
-app.get('/', (req, res) => {
-    console.log(req);
-    return res.status(234).send('Welcome to MERN Stack Tuts');
+app.get('/', (request, response) => {
+    console.log(request);
+    return response.status(234).send('Welcome to MERN Stack Tuts');
 });
 
-app.listen(PORT, () => {
-    console.log(`App is listening on ${PORT}`);
-});
+mongoose
+    .connect(mongoDBURL)
+    .then(() => {
+        console.log('App connected to database');
+        app.listen(PORT, () => {
+            console.log(`App is listening on ${PORT}`);
+    });
+    })
+    .catch((error) => {
+        console.log(error);
+    });
